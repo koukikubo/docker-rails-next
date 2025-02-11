@@ -1,59 +1,55 @@
 # syntax = docker/dockerfile:1
 
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
+# RUBY_VERSION は .ruby-version や Gemfile の Ruby バージョンと一致させる
 ARG RUBY_VERSION=3.2.2
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 
-# Rails app lives here
+# 作業ディレクトリを /rails に設定
 WORKDIR /rails
 
-# Set production environment
+# 環境変数の設定
 ENV RAILS_ENV="development" \
     BUNDLE_DEPLOYMENT="0" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT=""
 
-
-# Throw-away build stage to reduce size of final image
+# **ここからビルド用のステージ**
 FROM base as build
 
-# Install packages needed to build gems
+# 必要なパッケージをインストール
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config
 
-# Install application gems
+# Gemfile をコピーし、Gem をインストール
 COPY Gemfile Gemfile.lock ./
 RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
-# Copy application code
+# アプリケーションコードをコピー
 COPY . .
 
-# Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile app/ lib/
-
-
-# Final stage for app image
+# **ここから本番用の最終ステージ**
 FROM base
 
-# Install packages needed for deployment
+# 本番環境に必要なパッケージをインストール
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libvips postgresql-client && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Copy built artifacts: gems, application
+# ビルド済みのファイルをコピー
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
-# Run and own only the runtime files as a non-root user for security
+# 非 root ユーザーを作成して権限を設定（セキュリティ向上）
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
 USER rails:rails
 
-# Entrypoint prepares the database.
+# Rails のデフォルトポート 3000 を公開
+EXPOSE 3000
+
+# DB 初期化スクリプトを実行
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
+# Rails サーバーを起動
 CMD ["./bin/rails", "server"]

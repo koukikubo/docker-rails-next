@@ -1,18 +1,20 @@
-# ベースイメージ
+# ベースイメージとして軽量な Node.js Alpine を使用
 FROM node:18-alpine
 
-# 作業ディレクトリの設定
+# 作業ディレクトリを /next に設定
 WORKDIR /next
 
-# package.json と yarn.lock をコピー
+# 依存関係のキャッシュを利用するため package.json と yarn.lock をコピー
 COPY package.json yarn.lock ./
 
-# 依存関係をインストール
+# 依存関係のインストール（開発環境）
 RUN yarn install --frozen-lockfile
 
-# 残りのソースコードをコピー
+# アプリケーションのコードをコピー
 COPY . .
 
-# Next.js の開発環境での実行
+# Next.js のデフォルトポート 3000 を公開
 EXPOSE 3000
-CMD ["yarn", "dev", "-p", "3000"]
+
+# Next.js の開発環境を起動（本番なら `yarn build && yarn start`）
+CMD ["yarn", "dev"]
