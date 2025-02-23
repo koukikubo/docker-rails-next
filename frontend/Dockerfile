@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # 作業ディレクトリを /next に設定
-WORKDIR /next
+WORKDIR /next-app
 
 # 依存関係のキャッシュを利用するため package.json と yarn.lock をコピー
 COPY package.json yarn.lock ./
