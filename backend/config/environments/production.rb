@@ -26,4 +26,6 @@ Rails.application.configure do
 
   # 全てのホストを一時的に許可（必要なら）
   config.hosts.clear
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
 end
