@@ -40,6 +40,6 @@ EXPOSE 3000
 # DB 初期化スクリプトを実行
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 # Rails サーバーを起動
-CMD ["./bin/rails", "server"]
+CMD ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
 
 
