@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: docker-rails-next-backend
+    env: docker
+    repo: https://github.com/your-repo/docker-rails-next
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: docker-rails-next-db
+          property: connectionString
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: PORT
+        value: 3000
+    autoDeploy: true
+    startCommand: "bundle exec rails db:migrate && bundle exec rails s -b 0.0.0.0 -p $PORT"
+
+  - type: web
+    name: docker-rails-next-frontend
+    env: docker
+    repo: https://github.com/your-repo/docker-rails-next
+    plan: free
+    dockerfilePath: ./frontend/Dockerfile
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: "https://docker-rails-next-backend.onrender.com/api/v1"
+    autoDeploy: true
+    startCommand: "yarn build && yarn start"

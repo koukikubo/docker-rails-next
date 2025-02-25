@@ -4,4 +4,7 @@ Rails.application.routes.draw do
       resources :users, only: [:index]
     end
   end
+
+  # ルートをAPIのドキュメントやヘルスチェック用に設定
+  root to: proc { [200, { 'Content-Type' => 'text/plain' }, ['Rails API is running']] }
 end

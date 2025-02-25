@@ -12,8 +12,8 @@ end
 
 worker_timeout 3600 if rails_env == "development"
 
-port ENV.fetch("PORT", 3000)
-bind "tcp://0.0.0.0:#{ENV.fetch("PORT", 3000)}"
+port ENV.fetch("PORT")
+bind "tcp://0.0.0.0:#{ENV.fetch("PORT")}"
 
 environment rails_env
 pidfile ENV.fetch("PIDFILE", "tmp/pids/server.pid")

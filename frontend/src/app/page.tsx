@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1>ユーザー一覧</h1>
+      <h1>ユーザーの一覧</h1>
       <ul>
         {users.map((user: { id: number; name: string }) => (
           <li key={user.id}>{user.name}</li>
