@@ -6,14 +6,17 @@ export default function Home() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`)
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+  
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setUsers(data);  // 取得したデータを `users` に保存
+        setUsers(data);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Fetch error:", err));
   }, []);
+  
 
   return (
     <div>
