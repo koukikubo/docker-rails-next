@@ -6,13 +6,13 @@ export default function Home() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch("https://docker-rails-next.onrender.com/api/v1/users") // Rails API のエンドポイント
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("取得したデータ:", data);
-        setUsers(data);
+        console.log(data);
+        setUsers(data);  // 取得したデータを `users` に保存
       })
-      .catch((err) => console.error("エラー:", err));
+      .catch((err) => console.error(err));
   }, []);
 
   return (
