@@ -38,6 +38,8 @@ services:
         - /next-app/.next
     ports:
       - "8000:3000"  # Next.js のデフォルトポート 3000 をホストの 8000 とマッピング
+    depends_on:
+      - backend  # 追加
     tty: true
     stdin_open: true
 
