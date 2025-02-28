@@ -8,7 +8,11 @@ export default function Home() {
   useEffect(() => {
     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`, {
+      headers: {
+        Authorization: `Basic ${btoa(`${process.env.NEXT_PUBLIC_BASIC_AUTH_USER}:${process.env.NEXT_PUBLIC_BASIC_AUTH_PASSWORD}`)}`,
+      }
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log("Fetched Data:", data);
