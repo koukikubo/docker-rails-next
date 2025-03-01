@@ -8,4 +8,9 @@ const nextConfig: NextConfig = {
   }
 };
 
+module.exports = {
+  matcher: "/:path*", // 全ページに適用
+};
+
+
 export default nextConfig;
