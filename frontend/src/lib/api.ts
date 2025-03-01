@@ -1,7 +1,35 @@
+// export async function fetchUsers() {
+//   const response = await fetch("https://docker-rails-next.onrender.com/api/v1/users");
+//   if (!response.ok) {
+//     throw new Error(`HTTP error! Status: ${response.status}`);
+//   }
+//   return response.json();
+// }
+// lib/api.ts
 export async function fetchUsers() {
-  const response = await fetch("https://docker-rails-next.onrender.com/api/v1/users");
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const username = process.env.NEXT_PUBLIC_BASIC_AUTH_USER;
+  const password = process.env.NEXT_PUBLIC_BASIC_AUTH_PASSWORD;
+
+  if (!apiUrl || !username || !password) {
+    throw new Error("API URL or Basic Auth credentials are missing");
   }
-  return response.json();
+
+  try {
+    const response = await fetch(`${apiUrl}/api/v1/users`, {
+      headers: {
+        Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("API Fetch Error:", error);
+    throw error;
+  }
 }
