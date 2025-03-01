@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Basic::ControllerMethods
 
-  # before_action :basic_auth  # これを追加
+  before_action :basic_auth  # これを追加
 
   private
 
