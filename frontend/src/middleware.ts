@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const basicAuth = req.headers.get('authorization');
+  const basicAuth = req.headers.get("authorization");
 
-  const validAuth = `Basic ${btoa(`${process.env.NEXT_PUBLIC_BASIC_AUTH_USER}:${process.env.NEXT_PUBLIC_BASIC_AUTH_PASSWORD}`)}`;
+  const validAuth = `Basic ${btoa(`${process.env.BASIC_AUTH_USER}:${process.env.BASIC_AUTH_PASSWORD}`)}`;
 
   if (basicAuth !== validAuth) {
-    return new NextResponse('Unauthorized', {
+    return new NextResponse("Unauthorized", {
       status: 401,
       headers: {
-        'WWW-Authenticate': 'Basic realm="Secure Area"',
+        "WWW-Authenticate": 'Basic realm="Secure Area"',
       },
     });
   }
@@ -17,7 +17,7 @@ export function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// 適用範囲を指定（Next.js全体に適用する場合は / のみ）
+// 適用範囲の指定（全ページに適用）
 export const config = {
-  matcher: ['/', '/api/:path*'],
+  matcher: ["/", "/api/:path*"],
 };

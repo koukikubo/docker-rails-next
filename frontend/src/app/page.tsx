@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fetchUsers } from "../lib/api"; // API呼び出しを統一
 
 export default function Home() {
   const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
@@ -8,18 +9,7 @@ export default function Home() {
   useEffect(() => {
     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`, {
-      headers: {
-        Authorization: `Basic ${btoa(`${process.env.NEXT_PUBLIC_BASIC_AUTH_USER}:${process.env.NEXT_PUBLIC_BASIC_AUTH_PASSWORD}`)}`,
-      }
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(`HTTP error! Status: ${res.status}, Message: ${errorText}`);
-        }
-        return res.json();
-      })
+    fetchUsers()
       .then((data) => {
         console.log("Fetched Data:", data);
         if (Array.isArray(data)) {
