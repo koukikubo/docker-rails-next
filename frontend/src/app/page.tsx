@@ -1,14 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchUsers } from "@/lib/api"; // API関数をインポート
 
 export default function Home() {
-  const [users, setUsers] = useState<{ id: number; name: string }[]>([]); // 初期値を空の配列にする
-  const [error, setError] = useState<string | null>(null);
+  const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
 
   useEffect(() => {
-    fetchUsers()
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`, {
+      headers: {
+        Authorization: `Basic ${btoa(`${process.env.NEXT_PUBLIC_BASIC_AUTH_USER}:${process.env.NEXT_PUBLIC_BASIC_AUTH_PASSWORD}`)}`,
+      }
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`HTTP error! Status: ${res.status}, Message: ${errorText}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         console.log("Fetched Data:", data);
         if (Array.isArray(data)) {
@@ -18,16 +29,12 @@ export default function Home() {
           setUsers([]);
         }
       })
-      .catch((err) => {
-        console.error("Fetch error:", err);
-        setError("データの取得に失敗しました");
-      });
+      .catch((err) => console.error("Fetch error:", err));
   }, []);
 
   return (
     <div>
       <h1>ユーザーの一覧</h1>
-      {error ? <p style={{ color: "red" }}>{error}</p> : null}
       <ul>
         {users.length > 0 ? (
           users.map((user) => <li key={user.id}>{user.name}</li>)
