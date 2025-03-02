@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
   const basicAuth = req.headers.get("authorization");
 
-  const validAuth = `Basic ${btoa(`${process.env.BASIC_AUTH_USER}:${process.env.BASIC_AUTH_PASSWORD}`)}`;
+  const validAuth = `Basic ${btoa(`${process.env.NEXT_PUBLIC_BASIC_AUTH_USER}:${process.env.NEXT_PUBLIC_BASIC_AUTH_PASSWORD}`)}`;
 
   if (basicAuth !== validAuth) {
     return new NextResponse("Unauthorized", {
@@ -17,7 +17,7 @@ export function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// 適用範囲の指定（全ページに適用）
+// Basic認証を適用するページの範囲を指定
 export const config = {
-  matcher: ["/", "/api/:path*"],
+  matcher: ["/"], // APIリクエストには適用しない
 };
