@@ -1,6 +1,7 @@
 # syntax = docker/dockerfile:1
 # RUBY_VERSION は .ruby-version や Gemfile の Ruby バージョンと一致させる
 ARG RUBY_VERSION=3.2.2
+
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 # 作業ディレクトリを /rails に設定
 WORKDIR /rails
