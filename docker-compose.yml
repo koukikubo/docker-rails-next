@@ -10,7 +10,6 @@ services:
       - "3000:3000"
     environment:
         RAILS_ENV: development
-        DATABASE_URL: postgres://root:password@db:5432
         BASIC_AUTH_USER: ${BASIC_AUTH_USER}
         BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
     depends_on:
