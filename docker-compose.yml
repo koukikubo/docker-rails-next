@@ -8,6 +8,8 @@ services:
       - ./backend:/rails:cached
     ports:
       - "3000:3000"
+    env_file:  # ← .env を明示的に読み込む
+      - .env
     environment:
         RAILS_ENV: development
         BASIC_AUTH_USER: ${BASIC_AUTH_USER}
@@ -16,6 +18,7 @@ services:
       - db
     tty: true
     stdin_open: true
+
 
   # PostgreSQL のコンテナ
   db:
