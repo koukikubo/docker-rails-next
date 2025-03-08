@@ -25,5 +25,6 @@ Rails.application.configure do
   # config.hosts << /\Adocker-rails-next\.onrender\.com(?::\d+)?\z/
   # 全てのホストを一時的に許可（必要なら）
   config.hosts.clear
+  config.host_authorization = { exclude: ->(request) { request.path == "/health" } }
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
