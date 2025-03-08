@@ -6,7 +6,7 @@ FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 # 作業ディレクトリを /rails に設定
 WORKDIR /rails
 # 環境変数の設定
-ENV RAILS_ENV="development" \
+ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="0" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="" \
