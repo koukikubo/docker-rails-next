@@ -8,6 +8,8 @@ services:
       - ./backend:/rails:cached
     ports:
       - "3000:3000"
+    env_file:  # ← .env を読み込む
+      - .env
     environment:
       RAILS_ENV: production
     depends_on:
