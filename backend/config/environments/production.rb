@@ -23,9 +23,8 @@ Rails.application.configure do
 
   # # Renderのホスト許可
   config.hosts << "docker-rails-next.onrender.com"
-
   # 全てのホストを一時的に許可（必要なら）
-  config.hosts.clear
+  # config.hosts.clear
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
 end
