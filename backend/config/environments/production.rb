@@ -28,3 +28,4 @@ Rails.application.configure do
   config.host_authorization = { exclude: ->(request) { request.path == "/health" } }
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
+end
