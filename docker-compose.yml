@@ -8,12 +8,8 @@ services:
       - ./backend:/rails:cached
     ports:
       - "3000:3000"
-    env_file:  # ← .env を明示的に読み込む
-      - .env
     environment:
-        RAILS_ENV: development
-        BASIC_AUTH_USER: ${BASIC_AUTH_USER}
-        BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
+      RAILS_ENV: production
     depends_on:
       - db
     tty: true
