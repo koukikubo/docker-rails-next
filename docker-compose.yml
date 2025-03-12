@@ -4,6 +4,8 @@ services:
     build:
       context: ./backend
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -e production -p ${PORT:-3000} -b '0.0.0.0'"
+    buildCommand: "./bin/render-build.sh" # ←ここで自動マイグレーションも実行
+
     volumes:
       - ./backend:/rails:cached
     ports:
@@ -11,7 +13,6 @@ services:
     env_file:  # ← .env を読み込む
       - backend/.env.production
       - backend/.env.development
-
     environment:
       RAILS_ENV: production
     depends_on:
