@@ -3,7 +3,8 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   config.enable_reloading = false
   config.eager_load = true
-  config.consider_all_requests_local = false
+  # 本番環境 エラーを表示
+  config.consider_all_requests_local = true
   config.active_storage.service = :local
   config.force_ssl = true # SSLが必要かどうか確認
 
