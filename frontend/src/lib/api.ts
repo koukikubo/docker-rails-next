@@ -1,32 +1,32 @@
-// src/lib/fetchApi.ts
-
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
-
+// frontend/src/lib/api.ts
 export async function fetchApi<T>(
   endpoint: string,
-  method: HttpMethod = 'GET',
-  body?: unknown
+  method: string = "GET",
+  body?: any
 ): Promise<T> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!apiUrl) throw new Error('API URL is missing');
+  if (!apiUrl) throw new Error("API URL is missing");
 
-  try {
-    const res = await fetch(`${apiUrl}${endpoint}`, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    });
+  const headers: HeadersInit = {};
+  let fetchBody;
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(`HTTP error! Status: ${res.status}, Message: ${errorText}`);
-    }
-
-    return await res.json();
-  } catch (error: any) {
-    console.error(`API Fetch Error on ${endpoint}:`, error.message);
-    throw error;
+  if (body instanceof FormData) {
+    fetchBody = body;
+  } else if (body) {
+    headers["Content-Type"] = "application/json";
+    fetchBody = JSON.stringify(body);
   }
+
+  const res = await fetch(`${apiUrl}${endpoint}`, {
+    method,
+    headers,
+    body: fetchBody,
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`HTTP error! ${res.status}: ${errorText}`);
+  }
+
+  return res.json();
 }

@@ -1,39 +1,51 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchApi } from "../lib/api"; // 統一OK！
+import { fetchApi } from "../lib/api"; // ※パス注意: lib/api.ts を呼び出し
 
-export default function Home() {
-  const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
+type Post = {
+  id: number;
+  title: string;
+  content: string;
+  image_url: string | null;
+  movie_url: string | null;
+  user_id: number;
+  created_at: string;
+};
+
+export default function PostsPage() {
+  const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
-    fetchApi<{ id: number; name: string }[]>("/api/v1/users")
+    fetchApi<Post[]>("/api/v1/posts")
       .then((data) => {
-        console.log("Fetched Data:", data);
-        if (Array.isArray(data)) {
-          setUsers(data);
-        } else {
-          console.error("Invalid API response:", data);
-          setUsers([]);
-        }
+        console.log("Fetched Posts:", data);
+        setPosts(data);
       })
       .catch((err) => console.error("Fetch error:", err));
   }, []);
 
   return (
     <div>
-      <h1>ユーザーの一覧</h1>
+      <h1>投稿一覧</h1>
       <ul>
-        {users.length > 0 ? (
-          users.map((user) => <li key={user.id}>{user.name}</li>)
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <li key={post.id}>
+              <h2>{post.title}</h2>
+              <p>{post.content}</p>
+              {post.image_url && (
+                <img src={post.image_url} alt="投稿画像" width="200" />
+              )}
+              {post.movie_url && (
+                <video src={post.movie_url} controls width="300" />
+              )}
+            </li>
+          ))
         ) : (
-          <li>データがありません</li>
+          <li>投稿がありません</li>
         )}
       </ul>
     </div>
   );
 }
-
-
-
