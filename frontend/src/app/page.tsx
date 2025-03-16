@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchApi } from "../lib/api"; // API呼び出しを統一
+import { fetchApi } from "../lib/api"; // 統一OK！
 
 export default function Home() {
   const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
 
   useEffect(() => {
     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
-
-    fetchApi("/api/v1/users")
+    fetchApi<{ id: number; name: string }[]>("/api/v1/users")
       .then((data) => {
         console.log("Fetched Data:", data);
         if (Array.isArray(data)) {
@@ -35,3 +34,6 @@ export default function Home() {
     </div>
   );
 }
+
+
+
