@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchUsers } from "../lib/api"; // API呼び出しを統一
+import { fetchApi } from "../lib/api"; // API呼び出しを統一
 
 export default function Home() {
   const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
 
-    fetchUsers()
+    fetchApi("/api/v1/users")
       .then((data) => {
         console.log("Fetched Data:", data);
         if (Array.isArray(data)) {
