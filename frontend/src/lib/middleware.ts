@@ -19,5 +19,7 @@ export function middleware(req: NextRequest) {
 
 // Basic認証を適用するページの範囲を指定
 export const config = {
-  matcher: ["/"], // APIリクエストには適用しない
+  matcher: '/:path*',  // ←すべてのページに対して認証をかける
 };
+
+
