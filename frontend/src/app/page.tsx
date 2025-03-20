@@ -1,37 +1,12 @@
-"use client";
+import Link from "next/link";
 
-import { useEffect, useState } from "react";
-import { fetchUsers } from "../lib/api"; // API呼び出しを統一
-
-export default function Home() {
-  const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
-
-  useEffect(() => {
-    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
-
-    fetchUsers()
-      .then((data) => {
-        console.log("Fetched Data:", data);
-        if (Array.isArray(data)) {
-          setUsers(data);
-        } else {
-          console.error("Invalid API response:", data);
-          setUsers([]);
-        }
-      })
-      .catch((err) => console.error("Fetch error:", err));
-  }, []);
-
+export default async function Home() {
+  // ここでサーバーサイドのデータをフェッチ（SSR）
+  
   return (
     <div>
-      <h1>ユーザーの一覧</h1>
-      <ul>
-        {users.length > 0 ? (
-          users.map((user) => <li key={user.id}>{user.name}</li>)
-        ) : (
-          <li>データがありません</li>
-        )}
-      </ul>
+      <h1>ようこそ！TOPページです！</h1>
+      <Link href="/posts">投稿一覧を見る</Link>
     </div>
   );
 }
