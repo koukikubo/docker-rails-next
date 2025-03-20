@@ -45,7 +45,7 @@ export default function NewPostPage() {
           />
         </div>
         <div>
-          <label>内容</label>
+          <label>本文</label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
