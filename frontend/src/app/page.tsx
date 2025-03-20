@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchApi } from "../lib/api"; // ※パス注意: lib/api.ts を呼び出し
-
+import { fetchApi } from "../lib/api"; 
 type Post = {
   id: number;
   title: string;
