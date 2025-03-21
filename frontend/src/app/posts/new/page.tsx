@@ -27,7 +27,8 @@ export default function NewPostPage() {
           body: formData,
         }
       );
-
+      const data = await response.json();
+      console.log("Error response:", data); // ❗エラー詳細を表示
       if (response.ok) {
         alert("投稿に成功しました！");
         router.push("/posts");
