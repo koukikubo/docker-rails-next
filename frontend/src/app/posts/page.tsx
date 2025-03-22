@@ -35,7 +35,7 @@ export default function PostsPage() {
   return (
     <div>
       <h1>投稿一覧</h1>
-      <Link href="/posts/new">投稿一覧を見る</Link>
+      <Link href="/posts/new">投稿</Link>
       <ul>
         {posts.length > 0 ? (
           posts.map((post) => (
