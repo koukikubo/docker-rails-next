@@ -9,8 +9,9 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
+    Rails.logger.debug "Received params: #{params.inspect}"
     @post = Post.new(post_params)
-    
+  
     if @post.save
       render json: @post.as_json(include: [:image_attachment, :movie_attachment]), status: :created
     else
