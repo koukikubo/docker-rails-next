@@ -4,12 +4,7 @@ class Api::V1::PostsController < ApplicationController
     render json: @posts.as_json(include: [:image_attachment, :movie_attachment])
   end
 
-  def new
-    @post = Post.new
-  end
-
   def create
-    Rails.logger.debug "Received params: #{params.inspect}"
     @post = Post.new(post_params)
   
     if @post.save
@@ -35,6 +30,7 @@ class Api::V1::PostsController < ApplicationController
 
   def show
     @post = Post.find(params[:id])
+    render json: @post
   end
 
   private
