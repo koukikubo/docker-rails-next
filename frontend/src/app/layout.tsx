@@ -1,4 +1,6 @@
 import Link from "next/link";
+import "./globals.css"; 
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const loggedIn = false; // ここでログイン状態を後ほど動的に管理
