@@ -3,7 +3,7 @@ export async function fetchApi<T>(
   method: string = "GET",
   body?: T // 👈 ここで T 型をそのまま使う
 ): Promise<T> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl = `http://localhost:3000/api/v1/posts`;
   if (!apiUrl) throw new Error("API URL is missing");
 
   const headers: HeadersInit = {};
