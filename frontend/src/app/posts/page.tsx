@@ -18,8 +18,7 @@ export default function PostsPage() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/posts`, {
-      });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts`);
       const data = await res.json();
       setPosts(data);
     } catch (err) {
@@ -32,17 +31,29 @@ export default function PostsPage() {
   }, []);
 
   return (
-    <div>
-      <h1>投稿一覧</h1>
-      <Link href="/posts/new">投稿</Link>
-      <ul>
+    <div className="max-w-3xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">投稿一覧</h1>
+        <Link
+          href="/posts/new"
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        >
+          新規投稿
+        </Link>
+      </div>
+
+      <ul className="space-y-6">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <li key={post.id}>
-              <h2>{post.title}</h2>
-              <p>{post.content}</p>
-              {post.image_url && <img src={post.image_url} alt="画像" width="200" />}
-              {post.movie_url && <video src={post.movie_url} controls width="300" />}
+            <li key={post.id} className="border rounded p-4 bg-white shadow-sm">
+              <h2 className="text-lg font-semibold mb-2">{post.title}</h2>
+              <p className="mb-2">{post.content}</p>
+              {post.image_url && (
+                <img src={post.image_url} alt="画像" className="mb-2 max-w-xs rounded" />
+              )}
+              {post.movie_url && (
+                <video src={post.movie_url} controls className="w-full max-w-md rounded" />
+              )}
             </li>
           ))
         ) : (
