@@ -12,79 +12,79 @@ export default function NewPostPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const formData = new FormData();
-    formData.append("post[title]", title); // .title → title に修正
-    formData.append("post[content]", content);
-    formData.append("post[user_id]", "1"); // 👈 一時的なユーザーID
+    formData.append("title", title);
+    formData.append("content", content);
+    formData.append("post[user_id]", "1"); // 一時的なユーザー
+    if (image) formData.append("image", image);
+    if (movie) formData.append("movie", movie);
+    formData.append("user_id", "1"); // 仮認証
 
-    if (image) formData.append("post[image]", image);
-    if (movie) formData.append("post[movie]", movie);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts`, {
+      method: "POST",
+      body: formData,
+    });
 
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/v1/posts`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const data = await response.json();
-      console.log("Error response:", data); // ❗エラー詳細を表示
-      if (response.ok) {
-        alert("投稿に成功しました！");
-        router.push("/posts");
-      } else {
-        alert("投稿に失敗しました！");
-      }
-    } catch (error) {
-      console.error("エラーが発生しました:", error);
-      alert("通信エラーが発生しました");
+    if (res.ok) {
+      router.push("/posts");
+    } else {
+      alert("投稿に失敗しました");
     }
   };
 
   return (
-    <div>
-      <h1>新規投稿</h1>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+    <div className="max-w-2xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">新規投稿</h1>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label>タイトル</label>
+          <label className="block font-semibold mb-1">タイトル</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
             required
           />
         </div>
+
         <div>
-          <label>本文</label>
+          <label className="block font-semibold mb-1">本文</label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            className="w-full border rounded px-3 py-2 h-32 focus:outline-none focus:ring focus:ring-blue-300"
             required
-          ></textarea>
+          />
         </div>
+
         <div>
-          <label>画像</label>
+          <label className="block font-semibold mb-1">画像</label>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setImage(e.target.files?.[0] || null)}
+            className="file:border file:rounded file:px-3 file:py-1 file:bg-blue-600 file:text-white file:cursor-pointer"
           />
         </div>
+
         <div>
-          <label>動画</label>
+          <label className="block font-semibold mb-1">動画</label>
           <input
             type="file"
             accept="video/*"
             onChange={(e) => setMovie(e.target.files?.[0] || null)}
+            className="file:border file:rounded file:px-3 file:py-1 file:bg-blue-600 file:text-white file:cursor-pointer"
           />
         </div>
-        <button type="submit">投稿する</button>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            Tailwind 動作チェック
-        </button>
 
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+        >
+          投稿する
+        </button>
       </form>
     </div>
   );
