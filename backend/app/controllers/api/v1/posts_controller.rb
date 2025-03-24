@@ -23,9 +23,13 @@ class Api::V1::PostsController < ApplicationController
     @post = Post.find(params[:id])
   end
 
-  def update
+  def update  
     @post = Post.find(params[:id])
-    post.update(post_params)
+    if @post.update(post_params)
+      render json: @post.as_json(include: [:image_attachment, :movie_attachment])
+    else
+      render json: @post.errors, status: :unprocessable_entity
+    end
   end
 
   def show
