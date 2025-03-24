@@ -18,7 +18,7 @@ export default function PostsPage() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts`);
+      const res = await fetch(`http://localhost:3000/api/v1/posts`);
       const data = await res.json();
       setPosts(data);
     } catch (err) {
