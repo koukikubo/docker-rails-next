@@ -1,46 +1,46 @@
-class Api::V1::PostsController < ApplicationController
-  def index
-    @posts = Post.all.order(created_at: :desc)
-    render json: @posts.as_json(include: [:image_attachment, :movie_attachment])
-  end
+def index
+  @posts = Post.all.order(created_at: :desc)
+  render json: @posts.map { |post| serialize_post(post) }
+end
 
-  def create
-    @post = Post.new(post_params)
-  
-    if @post.save
-      render json: @post.as_json(include: [:image_attachment, :movie_attachment]), status: :created
-    else
-      render json: @post.errors, status: :unprocessable_entity
-    end
-  end
+def show
+  @post = Post.find(params[:id])
+  render json: serialize_post(@post)
+end
 
-  def destroy
-    post = Post.find(params[:id])
-    post.destroy
+def create
+  @post = Post.new(post_params)
+  if @post.save
+    render json: serialize_post(@post), status: :created
+  else
+    render json: @post.errors, status: :unprocessable_entity
   end
+end
 
-  def edit
-    @post = Post.find(params[:id])
+def update
+  @post = Post.find(params[:id])
+  if @post.update(post_params)
+    render json: serialize_post(@post)
+  else
+    render json: @post.errors, status: :unprocessable_entity
   end
+end
 
-  def update  
-    @post = Post.find(params[:id])
-    if @post.update(post_params)
-      render json: @post.as_json(include: [:image_attachment, :movie_attachment])
-    else
-      render json: @post.errors, status: :unprocessable_entity
-    end
-  end
+private
 
-  def show
-    @post = Post.find(params[:id])
-    render json: @post
-  end
+def serialize_post(post)
+  {
+    id: post.id,
+    title: post.title,
+    content: post.content,
+    user_id: post.user_id,
+    created_at: post.created_at,
+    updated_at: post.updated_at,
+    image_url: post.image.attached? ? url_for(post.image) : nil,
+    movie_url: post.movie.attached? ? url_for(post.movie) : nil,
+  }
+end
 
-  private
-  def post_params
-    params.require(:post).permit(:user_id, :title, :content, :image, :movie)
-  end
-  
-
+def post_params
+  params.require(:post).permit(:user_id, :title, :content, :image, :movie)
 end
