@@ -16,12 +16,14 @@ export default function NewPostPage() {
     const formData = new FormData();
     formData.append("post[title]", title); // .title → title に修正
     formData.append("post[content]", content);
+    formData.append("post[user_id]", "1"); // 👈 一時的なユーザーID
+
     if (image) formData.append("post[image]", image);
     if (movie) formData.append("post[movie]", movie);
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts`,
+        `http://localhost:3000/api/v1/posts`,
         {
           method: "POST",
           body: formData,
@@ -79,6 +81,10 @@ export default function NewPostPage() {
           />
         </div>
         <button type="submit">投稿する</button>
+        <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Tailwind 動作チェック
+        </button>
+
       </form>
     </div>
   );
