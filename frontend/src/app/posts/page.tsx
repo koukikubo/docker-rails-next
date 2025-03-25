@@ -46,7 +46,9 @@ export default function PostsPage() {
         {posts.length > 0 ? (
           posts.map((post) => (
             <li key={post.id} className="border rounded p-4 bg-white shadow-sm">
-              <h2 className="text-lg font-semibold mb-2">{post.title}</h2>
+              <h2 className="text-lg font-semibold mb-2 text-blue-600 hover:underline">
+                <Link href={`/posts/${post.id}`}>{post.title}</Link>
+              </h2>              
               <p className="mb-2">{post.content}</p>
               {post.image_url && (
                 <img src={post.image_url} alt="画像" className="mb-2 max-w-xs rounded" />
