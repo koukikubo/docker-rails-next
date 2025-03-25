@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button";
 
 export default function NewPostPage() {
   const [title, setTitle] = useState("");
@@ -86,9 +85,6 @@ export default function NewPostPage() {
         >
           投稿する
         </button>
-        {/* 確認用 */}
-        <Button onClick={() => console.log("clicked!")}>クリック</Button>  
-
       </form>
     </div>
   );

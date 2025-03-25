@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Button from "@/components/ui/Button";
 
 type Post = {
   id: number;
@@ -58,12 +59,9 @@ export default function PostDetail({ params }: { params: { id: string } }) {
         >
           編集
         </button>
-        <button
-          onClick={handleDelete}
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-        >
-          削除
-        </button>
+        <Button variant="danger" onClick={handleDelete}>
+          削除する
+        </Button>
       </div>
     </div>
   );
