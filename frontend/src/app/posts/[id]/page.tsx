@@ -1,8 +1,6 @@
-// src/app/posts/[id]/page.tsx
-
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 
@@ -14,24 +12,26 @@ type Post = {
   movie_url: string | null;
 };
 
-export default function PostDetail({ params }: { params: { id: string } }) {
-  const [post, setPost] = useState<Post | null>(null);
+export default function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
+  const { id } = use(params); // ✅ Promise unwrap
+  const [post, setPost] = useState<Post | null>(null);
 
-  useEffect(() => {
-    const fetchPost = async () => {
-      const res = await fetch(`http://localhost:3000/api/v1/posts/${params.id}`);
+  const fetchPost = async () => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`);
       const data = await res.json();
       setPost(data);
-    };
-    fetchPost();
-  }, [params.id]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm("本当に削除しますか？");
     if (!confirmDelete) return;
 
-    const res = await fetch(`http://localhost:3000/api/v1/posts/${params.id}`, {
+    const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`, {
       method: "DELETE",
     });
 
@@ -41,6 +41,10 @@ export default function PostDetail({ params }: { params: { id: string } }) {
       alert("削除に失敗しました");
     }
   };
+
+  useEffect(() => {
+    fetchPost();
+  }, [id]);
 
   if (!post) return <div>Loading...</div>;
 
