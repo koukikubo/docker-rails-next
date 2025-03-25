@@ -19,11 +19,21 @@ class Api::V1::PostsController < ApplicationController
   end
   
   def update
-    @post = Post.find(params[:id])
-    if @post.update(post_params)
-      render json: serialize_post(@post)
+    post = Post.find(params[:id])
+  
+    # 添付削除用のフラグ確認
+    if params[:post][:remove_image] == "true"
+      post.image.purge if post.image.attached?
+    end
+  
+    if params[:post][:remove_movie] == "true"
+      post.movie.purge if post.movie.attached?
+    end
+  
+    if post.update(post_params)
+      render json: serialize_post(post)
     else
-      render json: @post.errors, status: :unprocessable_entity
+      render json: { error: post.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
