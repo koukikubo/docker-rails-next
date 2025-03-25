@@ -14,12 +14,12 @@ export default function NewPostPage() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("post[user_id]", "1"); // 一時的なユーザー
-    if (image) formData.append("image", image);
-    if (movie) formData.append("movie", movie);
-    formData.append("user_id", "1"); // 仮認証
+    formData.append("post[title]", title);
+    formData.append("post[content]", content);
+    formData.append("post[user_id]", "1");
+    
+    if (image) formData.append("post[image]", image);
+    if (movie) formData.append("post[movie]", movie);
 
     const res = await fetch(`http://localhost:3000/api/v1/posts`, {
       method: "POST",
