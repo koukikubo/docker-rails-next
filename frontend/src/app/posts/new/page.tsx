@@ -86,6 +86,9 @@ export default function NewPostPage() {
         >
           投稿する
         </button>
+        {/* 確認用 */}
+        <Button onClick={() => console.log("clicked!")}>クリック</Button>  
+
       </form>
     </div>
   );
