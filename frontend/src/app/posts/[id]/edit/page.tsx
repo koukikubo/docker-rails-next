@@ -13,8 +13,8 @@ export default function EditPostPage({
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [imageURL, setImageURL] = useState<File | null>(null);
-  const [movieURL, setMovieURL] = useState<File | null>(null);
+  const [imageURL, setImageURL] = useState<string | null>(null);
+  const [movieURL, setMovieURL] = useState<string | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [movie, setMovie] = useState<File | null>(null);
   const [removeImage, setRemoveImage] = useState(false);
