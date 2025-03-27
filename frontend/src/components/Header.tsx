@@ -21,7 +21,9 @@ export default function Header() {
           <>
             <Link href="/api/auth/login" className="text-blue-600 hover:underline">ログイン</Link>
             <span>|</span>
-            <Link href="/api/auth/signup" className="text-blue-600 hover:underline">新規登録</Link>
+            <Link href="/api/auth/login?screen_hint=signup" className="text-blue-600 hover:underline">
+              新規登録
+            </Link>
           </>
         )}
       </nav>
