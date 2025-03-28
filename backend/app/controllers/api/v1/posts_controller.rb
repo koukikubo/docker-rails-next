@@ -10,7 +10,10 @@ class Api::V1::PostsController < ApplicationController
   end
   
   def create
-    @post = Post.new(post_params)
+    uid = params[:post][:uid]
+    user = User.find_or_create_by!(uid: uid)
+    @post = user.posts.build(post_params.except(:uid)) # post_params に uid は含まれてるので except(:uid) で除外
+
     if @post.save
       render json: serialize_post(@post), status: :created
     else
@@ -59,7 +62,7 @@ class Api::V1::PostsController < ApplicationController
   end
   
   def post_params
-    params.require(:post).permit(:user_id, :title, :content, :image, :movie)
+    params.require(:post).permit(:uid, :title, :content, :image, :movie)
   end
   
 end
