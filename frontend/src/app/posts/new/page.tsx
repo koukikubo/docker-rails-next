@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function NewPostPage() {
+  const { user } = useUser(); // 👈 ここで定義
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState<File | null>(null);
@@ -15,9 +17,9 @@ export default function NewPostPage() {
 
     const formData = new FormData();
     formData.append("post[title]", title);
-    formData.append("post[content]", content);
-    formData.append("post[user_id]", "1");
-    
+    formData.append("post[content]", content);    
+    formData.append("post[uid]", user?.sub || ""); // handleSubmit のときに uid を付与
+
     if (image) formData.append("post[image]", image);
     if (movie) formData.append("post[movie]", movie);
 
