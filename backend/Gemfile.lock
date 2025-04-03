@@ -107,6 +107,8 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
+    jwt (2.10.1)
+      base64
     logger (1.6.5)
     loofah (2.24.0)
       crass (~> 1.0.2)
@@ -121,6 +123,8 @@ GEM
     minitest (5.25.4)
     msgpack (1.8.0)
     mutex_m (0.3.0)
+    net-http (0.6.0)
+      uri
     net-imap (0.5.5)
       date
       net-protocol
@@ -195,6 +199,7 @@ GEM
     timeout (0.4.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    uri (1.0.3)
     websocket-driver (0.7.7)
       base64
       websocket-extensions (>= 0.1.0)
@@ -210,6 +215,8 @@ DEPENDENCIES
   bootsnap
   debug
   dotenv-rails
+  jwt
+  net-http
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors

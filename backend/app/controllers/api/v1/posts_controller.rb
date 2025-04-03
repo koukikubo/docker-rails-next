@@ -1,4 +1,6 @@
 class Api::V1::PostsController < ApplicationController
+  skip_before_action :authorize_request, only: [:index, :show]
+
   def index
     @posts = Post.all.order(created_at: :desc)
     render json: @posts.map { |post| serialize_post(post) }
@@ -9,17 +11,28 @@ class Api::V1::PostsController < ApplicationController
     render json: serialize_post(@post)
   end
   
-  def create
-    uid = params[:post][:uid]
-    user = User.find_or_create_by!(uid: uid)
-    @post = user.posts.build(post_params.except(:uid)) # post_params に uid は含まれてるので except(:uid) で除外
+  # def create
+  #   uid = params[:post][:uid]
+  #   user = User.find_or_create_by!(uid: uid)
+  #   @post = user.posts.build(post_params.except(:uid)) # post_params に uid は含まれてるので except(:uid) で除外
 
-    if @post.save
-      render json: serialize_post(@post), status: :created
+  #   if @post.save
+  #     render json: serialize_post(@post), status: :created
+  #   else
+  #     render json: @post.errors, status: :unprocessable_entity
+  #   end
+  # end
+
+  def create
+    post = @current_user.posts.build(post_params)
+
+    if post.save
+      render json: post
     else
-      render json: @post.errors, status: :unprocessable_entity
+      render json: post.errors, status: :unprocessable_entity
     end
   end
+
   
   def update
     post = Post.find(params[:id])
