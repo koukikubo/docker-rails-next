@@ -1,4 +1,13 @@
-// frontend/pages/api/auth/[...auth0].ts
-import { handleAuth } from '@auth0/nextjs-auth0';
+import { handleAuth, handleCallback } from "@auth0/nextjs-auth0";
 
-export default handleAuth();
+export default handleAuth({
+  callback: handleCallback({
+    afterCallback: async (req, res, session, state) => {
+      // accessToken をセッションに含める
+      return {
+        ...session,
+        accessToken: session.accessToken,
+      };
+    },
+  }),
+});

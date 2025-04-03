@@ -1,5 +1,3 @@
-// src/app/posts/new/page.tsx
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -8,7 +6,6 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function NewPostPage() {
   const router = useRouter();
-  
   const { user, isLoading } = useUser();
   const [token, setToken] = useState<string | null>(null);
 
@@ -20,17 +17,15 @@ export default function NewPostPage() {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const res = await fetch("/api/auth/session");
-        const json = await res.json();  
+        const res = await fetch("http://localhost:8000/api/auth/session", {
+          credentials: "include", // セッションクッキー送信に必要
+        });
+        const json = await res.json();
+        console.log("[DEBUG] セッションレスポンス:", json);
 
-        console.log("[DEBUG] session response text:", json); // 👈 ここで確認！
-  
-        if (!json) return;
-  
-        const session = JSON.parse(json);
-        if (session?.accessToken) {
-          setToken(session.accessToken);
-          console.log("[DEBUG] Access Token:", session.accessToken); // 👈 トークンの中身も確認
+        if (json?.accessToken) {
+          setToken(json.accessToken);
+          console.log("[DEBUG] Access Token:", json.accessToken);
         } else {
           console.warn("[DEBUG] session.accessToken が存在しません");
         }
@@ -38,11 +33,9 @@ export default function NewPostPage() {
         console.error("アクセストークン取得失敗:", err);
       }
     };
-  
+
     fetchToken();
   }, []);
-  
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,11 +47,11 @@ export default function NewPostPage() {
     if (movie) formData.append("post[movie]", movie);
 
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/posts`, {
+      const res = await fetch("http://localhost:3000/api/v1/posts", {
         method: "POST",
         body: formData,
         headers: {
-          Authorization: `Bearer ${token}`, // 👈 ここが重要
+          Authorization: `Bearer ${token}`,
         },
       });
 

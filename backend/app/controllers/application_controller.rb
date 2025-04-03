@@ -10,6 +10,8 @@ class ApplicationController < ActionController::API
 
   def authorize_request
     header = request.headers['Authorization']
+    Rails.logger.debug("[DEBUG] Authorization Header: #{header}")
+
     token = header.split(' ').last if header
 
     # Auth0の公開鍵を取得
