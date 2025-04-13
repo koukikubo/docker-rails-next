@@ -1,4 +1,5 @@
 class Api::V1::PostsController < ApplicationController
+  before_action :authorize_request
   def index
     @posts = Post.all.order(created_at: :desc)
     render json: @posts.map { |post| serialize_post(post) }
@@ -10,7 +11,8 @@ class Api::V1::PostsController < ApplicationController
   end
   
   def create
-    @post = Post.new(post_params)
+    @post = @current_user.posts.new(post_params)
+
     if @post.save
       render json: serialize_post(@post), status: :created
     else
@@ -50,7 +52,7 @@ class Api::V1::PostsController < ApplicationController
       id: post.id,
       title: post.title,
       content: post.content,
-      user_id: post.user_id,
+      # user_id: post.user_id,
       created_at: post.created_at,
       updated_at: post.updated_at,
       image_url: post.image.attached? ? url_for(post.image) : nil,
@@ -59,7 +61,7 @@ class Api::V1::PostsController < ApplicationController
   end
   
   def post_params
-    params.require(:post).permit(:user_id, :title, :content, :image, :movie)
+    params.require(:post).permit(:title, :content, :image, :movie)
   end
   
 end

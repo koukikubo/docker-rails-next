@@ -13,6 +13,12 @@ export default function NewPostPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const token = localStorage.getItem("token"); // ← ここが重要！
+    if (!token) {
+      alert("トークンが見つかりません。ログインし直してください。");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("post[title]", title);
     formData.append("post[content]", content);
@@ -24,6 +30,9 @@ export default function NewPostPage() {
     const res = await fetch(`http://localhost:3000/api/v1/posts`, {
       method: "POST",
       body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`, // ← ここが重要
+      },
     });
 
     if (res.ok) {
@@ -65,7 +74,7 @@ export default function NewPostPage() {
             type="file"
             accept="image/*"
             onChange={(e) => setImage(e.target.files?.[0] || null)}
-            className="file:border file:rounded file:px-3 file:py-1 file:bg-blue-600 file:text-white file:cursor-pointer"
+            className="file:border file:rounded file:px-3 file:py-1 file:bg-gray-600 file:text-white file:cursor-pointer"
           />
         </div>
 
@@ -75,13 +84,13 @@ export default function NewPostPage() {
             type="file"
             accept="video/*"
             onChange={(e) => setMovie(e.target.files?.[0] || null)}
-            className="file:border file:rounded file:px-3 file:py-1 file:bg-blue-600 file:text-white file:cursor-pointer"
+            className="file:border file:rounded file:px-3 file:py-1 file:bg-gray-600 file:text-white file:cursor-pointer"
           />
         </div>
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          className="bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-700 transition"
         >
           投稿する
         </button>

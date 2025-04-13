@@ -13,13 +13,12 @@ export default function EditPostPage({
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [imageURL, setImageURL] = useState<File | null>(null);
-  const [movieURL, setMovieURL] = useState<File | null>(null);
+  const [imageURL, setImageURL] = useState<string | null>(null); // ✅ 修正
+  const [movieURL, setMovieURL] = useState<string | null>(null); // ✅ 修正
   const [image, setImage] = useState<File | null>(null);
   const [movie, setMovie] = useState<File | null>(null);
   const [removeImage, setRemoveImage] = useState(false);
   const [removeMovie, setRemoveMovie] = useState(false);
-
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -29,8 +28,6 @@ export default function EditPostPage({
       setContent(data.content || "");
       setImageURL(data.image_url || null);
       setMovieURL(data.movie_url || null);
-
-      // image_url, movie_urlはあくまで表示用。アップロードはFileで再選択が必要
     };
     fetchPost();
   }, [id]);
@@ -87,7 +84,11 @@ export default function EditPostPage({
         {imageURL && (
           <div>
             <label className="block font-semibold mb-1">現在の画像</label>
-            <img src={imageURL} alt="現在の画像" className="mb-4 max-w-xs rounded" />
+            <img
+              src={imageURL}
+              alt="現在の画像"
+              className="mb-4 max-w-xs rounded"
+            />
           </div>
         )}
         <div>
@@ -138,7 +139,7 @@ export default function EditPostPage({
             </label>
           </div>
         )}
-        
+
         <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded">
           更新する
         </button>

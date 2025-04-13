@@ -36,7 +36,7 @@ export default function PostsPage() {
         <h1 className="text-2xl font-bold">投稿一覧</h1>
         <Link
           href="/posts/new"
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          className="px-4 py-2 bg-gray-600 border text-white rounded hover:bg-gray-700"
         >
           新規投稿
         </Link>
@@ -46,7 +46,7 @@ export default function PostsPage() {
         {posts.length > 0 ? (
           posts.map((post) => (
             <li key={post.id} className="border rounded p-4 bg-white shadow-sm">
-              <h2 className="text-lg font-semibold mb-2 text-blue-600 hover:underline">
+              <h2 className="text-lg font-semibold mb-2 text-black-600 hover:underline">
                 <Link href={`/posts/${post.id}`}>{post.title}</Link>
               </h2>              
               <p className="mb-2">{post.content}</p>
