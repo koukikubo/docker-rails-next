@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // ← ドロップダウン表示状態
+  const [isHovering, setIsHovering] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const updateLoginStatus = () => {
@@ -16,11 +18,29 @@ export default function Header() {
 
     updateLoginStatus();
     window.addEventListener("authChanged", updateLoginStatus);
-
-    return () => {
-      window.removeEventListener("authChanged", updateLoginStatus);
-    };
+    return () => window.removeEventListener("authChanged", updateLoginStatus);
   }, []);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsHovering(false);
+    }, 300); // ← ホバーが外れてから 0.3秒後に消える
+  };
+
+  const handleClick = () => {
+    setIsClicked((prev) => {
+      const newState = !prev;
+      if (!newState) setIsHovering(false); // ← クリックで閉じる時、ホバーも false にする
+      return newState;
+    });
+  };
+
+  const isMenuOpen = isHovering || isClicked;
 
   return (
     <header className="bg-white flex justify-between items-center px-6 py-4 shadow">
@@ -30,23 +50,28 @@ export default function Header() {
 
       <nav className="flex items-center gap-4 text-sm">
         {isLoggedIn ? (
-          // 👉 ホバー領域全体で検出（メニューが消えにくくなる）
           <div
             className="relative"
-            onMouseEnter={() => setIsMenuOpen(true)}
-            onMouseLeave={() => setIsMenuOpen(false)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             {/* 👤 ユーザーアイコン */}
-            <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer">
+            <div
+              className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer"
+              onClick={handleClick}
+            >
               <span className="text-gray-600 text-xl">
                 <FaUser />
-              </span>            
+              </span>
             </div>
 
             {/* 🔽 ドロップダウンメニュー */}
             {isMenuOpen && (
-              <div className="absolute right-0 mt-0 w-40 bg-white border rounded shadow-md z-10">
-                <Link href="/mypage" className="block px-4 py-2 hover:bg-gray-100">
+              <div className="absolute right-0 mt-0 w-40 bg-white border rounded shadow-md z-10 transition-opacity duration-300">
+                <Link
+                  href="/mypage"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
                   マイページ
                 </Link>
                 <button
