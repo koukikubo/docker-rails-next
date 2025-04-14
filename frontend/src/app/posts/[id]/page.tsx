@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 
@@ -12,14 +12,19 @@ type Post = {
   movie_url: string | null;
 };
 
-export default function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function PostDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const { id } = use(params); // ✅ Promise unwrap
+  const { id } = params; // ✅ Promise unwrap
   const [post, setPost] = useState<Post | null>(null);
 
   const fetchPost = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`);
+      const token = localStorage.getItem("token"); // ← トークン取得
+      const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // ← トークンをヘッダーに追加
+        },
+      });
       const data = await res.json();
       setPost(data);
     } catch (err) {
@@ -31,8 +36,13 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
     const confirmDelete = window.confirm("本当に削除しますか？");
     if (!confirmDelete) return;
 
+    const token = localStorage.getItem("token");
+
     const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (res.ok) {
@@ -52,9 +62,15 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
     <div className="max-w-2xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
       <p className="mb-4">{post.content}</p>
-      {post.image_url && <img src={post.image_url} alt="画像" className="mb-4 rounded" />}
+      {post.image_url && (
+        <img src={post.image_url} alt="画像" className="mb-4 rounded" />
+      )}
       {post.movie_url && (
-        <video src={post.movie_url} controls className="w-full max-w-md rounded mb-4" />
+        <video
+          src={post.movie_url}
+          controls
+          className="w-full max-w-md rounded mb-4"
+        />
       )}
       <div className="space-x-2">
         <button

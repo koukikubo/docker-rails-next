@@ -22,7 +22,6 @@ export default function NewPostPage() {
     const formData = new FormData();
     formData.append("post[title]", title);
     formData.append("post[content]", content);
-    formData.append("post[user_id]", "1");
     
     if (image) formData.append("post[image]", image);
     if (movie) formData.append("post[movie]", movie);

@@ -18,7 +18,15 @@ export default function PostsPage() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/posts`);
+      const token = localStorage.getItem("token"); // 🔑 トークン取得
+      const res = await fetch("http://localhost:3000/api/v1/posts", {
+        headers: {
+          Authorization: `Bearer ${token}`, // 🛡️ トークンをヘッダーに付ける
+        },
+      });
+  
+      if (!res.ok) throw new Error("投稿の取得に失敗しました");
+  
       const data = await res.json();
       setPosts(data);
     } catch (err) {

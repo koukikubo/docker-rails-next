@@ -1,14 +1,10 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function EditPostPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+export default function EditPostPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const router = useRouter();
 
   const [title, setTitle] = useState("");
@@ -22,7 +18,12 @@ export default function EditPostPage({
 
   useEffect(() => {
     const fetchPost = async () => {
-      const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`);
+      const token = localStorage.getItem("token"); // ← トークン取得
+      const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // ← ヘッダーに追加
+        },
+      });
       const data = await res.json();
       setTitle(data.title || "");
       setContent(data.content || "");
@@ -42,12 +43,15 @@ export default function EditPostPage({
     formData.append("post[remove_movie]", String(removeMovie));
     if (image) formData.append("post[image]", image);
     if (movie) formData.append("post[movie]", movie);
+    const token = localStorage.getItem("token");
 
     const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`, {
       method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`, // ← これが重要！
+      },
       body: formData,
     });
-
     if (res.ok) {
       router.push(`/posts/`);
     } else {
@@ -115,7 +119,11 @@ export default function EditPostPage({
 
         {movieURL && (
           <div>
-            <video src={movieURL} controls className="w-full max-w-md rounded mb-4" />
+            <video
+              src={movieURL}
+              controls
+              className="w-full max-w-md rounded mb-4"
+            />
           </div>
         )}
         <div>
@@ -140,7 +148,10 @@ export default function EditPostPage({
           </div>
         )}
 
-        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-6 py-2 rounded"
+        >
           更新する
         </button>
       </form>
