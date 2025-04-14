@@ -52,7 +52,6 @@ class Api::V1::PostsController < ApplicationController
       id: post.id,
       title: post.title,
       content: post.content,
-      # user_id: post.user_id,
       created_at: post.created_at,
       updated_at: post.updated_at,
       image_url: post.image.attached? ? url_for(post.image) : nil,
