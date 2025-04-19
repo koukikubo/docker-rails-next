@@ -3,12 +3,15 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
+import { useUserContext } from "@/components/UserContext"; // 👈 追加！
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const { user } = useUserContext(); // 👈 ここでContextからユーザー情報を取得！
 
   useEffect(() => {
     const updateLoginStatus = () => {
@@ -29,13 +32,13 @@ export default function Header() {
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
       setIsHovering(false);
-    }, 300); // ← ホバーが外れてから 0.3秒後に消える
+    }, 300);
   };
 
   const handleClick = () => {
     setIsClicked((prev) => {
       const newState = !prev;
-      if (!newState) setIsHovering(false); // ← クリックで閉じる時、ホバーも false にする
+      if (!newState) setIsHovering(false);
       return newState;
     });
   };
@@ -55,17 +58,25 @@ export default function Header() {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            {/* 👤 ユーザーアイコン */}
+            {/* 👤 ユーザー画像 */}
             <div
-              className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer"
+              className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden cursor-pointer"
               onClick={handleClick}
             >
-              <span className="text-gray-600 text-xl">
-                <FaUser />
-              </span>
+              {user?.profile_image_url ? (
+                <img
+                  src={user.profile_image_url}
+                  alt="プロフィール画像"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-600 text-xl">
+                  <FaUser />
+                </div>
+              )}
             </div>
 
-            {/* 🔽 ドロップダウンメニュー */}
+            {/* 🔽 ドロップダウン */}
             {isMenuOpen && (
               <div className="absolute right-0 mt-0 w-40 bg-white border rounded shadow-md z-10 transition-opacity duration-300">
                 <Link

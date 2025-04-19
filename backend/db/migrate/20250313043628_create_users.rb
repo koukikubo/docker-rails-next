@@ -7,5 +7,7 @@ class CreateUsers < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
+    add_column :users, :avatar_url, :string
+
   end
 end
